@@ -1,5 +1,6 @@
 package view;
 
+import net.miginfocom.swing.MigLayout; // Certifique-se de ter a biblioteca MigLayout no seu projeto
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -12,57 +13,43 @@ public class LoginView extends JPanel {
 
     public LoginView() {
       
-        setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
-
+        // Layout Constraints:
+        // "wrap 2, align center, gap 10 10": Configura 2 colunas, centraliza o *bloco* do formulário.
+        // Column Constraints:
+        // "[]": Deixa a primeira coluna (rótulos) do tamanho do seu conteúdo.
+        // "[250, fill]": Define a segunda coluna (campos) com largura fixa de 250 pixels e faz os componentes preencherem essa largura.
+        // O comando 'grow' foi removido para evitar o esticamento.
+        setLayout(new MigLayout(
+            "wrap 2, align center, gap 10 10, insets 50", // insets adiciona um espaçamento de segurança
+            "[]10[250, fill]" // Coluna 1 (Labels): auto-size; Coluna 2 (Campos): 250px fixo, preenche.
+        ));
 
         JLabel lblTitulo = new JLabel("Login");
         lblTitulo.setFont(new Font("Arial", Font.BOLD, 24));
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 2;
-        gbc.anchor = GridBagConstraints.CENTER;
-        add(lblTitulo, gbc);
+        // Adiciona o título ocupando 2 colunas e centralizado
+        add(lblTitulo, "span 2, align center, wrap 20"); // wrap 20: adiciona um espaçamento maior após o título
 
-
-        gbc.gridwidth = 1;
 
         // Name Field
-        gbc.gridy = 1;
-        gbc.gridx = 0;
-        gbc.anchor = GridBagConstraints.EAST; 
-        add(new JLabel("NOME:"), gbc);
-
-        gbc.gridx = 1;
-        gbc.anchor = GridBagConstraints.WEST;
+        add(new JLabel("NOME:"), "right"); // Alinha o rótulo à direita da Coluna 1
         campoNome = new JTextField(15);
-        add(campoNome, gbc);
+        add(campoNome, "h 30!"); // Preenche a Coluna 2 (devido ao [250, fill] acima), com altura fixa.
         
   
-        gbc.gridy = 2;
-        gbc.gridx = 0;
-        gbc.anchor = GridBagConstraints.EAST;
-        add(new JLabel("CPF:"), gbc);
-        
-        gbc.gridx = 1;
-        gbc.anchor = GridBagConstraints.WEST;
+        // CPF Field
+        add(new JLabel("CPF:"), "right"); // Alinha o rótulo à direita da Coluna 1
         campoCpf = new JTextField(15);
-        add(campoCpf, gbc);
-
-     
-        gbc.gridy = 3;
-        gbc.gridx = 0;
-        gbc.gridwidth = 2; 
-        gbc.anchor = GridBagConstraints.CENTER;
+        add(campoCpf, "h 30!"); // Preenche a Coluna 2, com altura fixa.
         
+     
+        // Painel de Botões - span 2 para ocupar as duas colunas
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         btnEntrar = new JButton("Entrar");
         btnCadastrar = new JButton("Cadastrar");
         buttonPanel.add(btnEntrar);
         buttonPanel.add(btnCadastrar);
         
-        add(buttonPanel, gbc);
+        add(buttonPanel, "span 2, align center, gaptop 15"); // Ocupa 2 colunas, centraliza e adiciona um espaçamento no topo.
     }
 
     public String getNome() {
