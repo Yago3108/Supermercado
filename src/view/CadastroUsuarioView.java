@@ -1,5 +1,6 @@
 package view;
 
+import net.miginfocom.swing.MigLayout; 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -12,47 +13,36 @@ public class CadastroUsuarioView extends JPanel {
     private final JButton btnVoltar;
 
     public CadastroUsuarioView() {
-        setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
+        setLayout(new MigLayout(
+            "wrap 2, gap 10 10, align center, center, insets 20", 
+        
+            "[right]10[::300, grow, fill]")); 
 
         JLabel lblTitulo = new JLabel("Cadastro de Usuário");
         lblTitulo.setFont(new Font("Arial", Font.BOLD, 20));
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 2;
-        add(lblTitulo, gbc);
+        add(lblTitulo, "span 2, align center, wrap 10");    
 
-        gbc.gridwidth = 1;
-        gbc.gridy++;
-        gbc.anchor = GridBagConstraints.WEST;
-        add(new JLabel("Nome:"), gbc);
-
-        gbc.gridx = 1;
+        
+        add(new JLabel("Nome:"), "right");
         campoNome = new JTextField(20);
-        add(campoNome, gbc);
+        add(campoNome, "growx"); 
 
-        gbc.gridx = 0;
-        gbc.gridy++;
-        add(new JLabel("CPF:"), gbc);
-
-        gbc.gridx = 1;
+        add(new JLabel("CPF:"), "right");
         campoCpf = new JTextField(11);
-        add(campoCpf, gbc);
+        add(campoCpf, "growx"); 
 
-        gbc.gridx = 0;
-        gbc.gridy++;
+
         cbEhAdmin = new JCheckBox("É Administrador?");
-        add(cbEhAdmin, gbc);
+        add(cbEhAdmin, "skip 1, wrap"); 
 
-        gbc.gridx = 0;
-        gbc.gridy++;
+        
+        JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         btnSalvar = new JButton("Salvar");
-        add(btnSalvar, gbc);
-
-        gbc.gridx = 1;
         btnVoltar = new JButton("Voltar");
-        add(btnVoltar, gbc);
+        painelBotoes.add(btnSalvar);
+        painelBotoes.add(btnVoltar);
+
+        add(painelBotoes, "span 2, align center");
     }
 
     public String getNome() { return campoNome.getText(); }
@@ -69,9 +59,10 @@ public class CadastroUsuarioView extends JPanel {
     public boolean isEhAdmin() { return cbEhAdmin.isSelected(); }
 
     public void addSalvarListener(ActionListener listener) { btnSalvar.addActionListener(listener); }
-    public void addVoltarListener(ActionListener listener) { btnVoltar.addActionListener(listener); 
-    this.setNome("");
-    this.setCPF("");
-    this.setAdmin();
+    public void addVoltarListener(ActionListener listener) { 
+    	btnVoltar.addActionListener(listener); 
+        this.setNome("");
+        this.setCPF("");
+        this.setAdmin();
     }
 }

@@ -45,7 +45,7 @@ public class Main extends JFrame {
         
     
         
-        exibirTela("login"); // Tela inicial
+        exibirTela("login"); 
     }
     
 

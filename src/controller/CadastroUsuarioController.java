@@ -19,7 +19,13 @@ public class CadastroUsuarioController {
         this.usuarioDAO = usuarioDAO;
         
         this.view.addSalvarListener(e -> salvarUsuario());
-        this.view.addVoltarListener(e -> app.exibirTela("login"));
+        this.view.addVoltarListener(e ->{
+        	app.exibirTela("login");
+        	view.setNome("");
+        	view.setCPF("");
+        	view.setAdmin();
+        } 
+        		);
     }
     
     private void salvarUsuario() {
@@ -31,16 +37,28 @@ public class CadastroUsuarioController {
             JOptionPane.showMessageDialog(view, "Nome e CPF são obrigatórios.", "Erro de Cadastro", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
-        Usuario novoUsuario = new Usuario(nome, cpf, ehAdmin);
-        if (usuarioDAO.inserir(novoUsuario)) {
-            JOptionPane.showMessageDialog(view, "Usuário cadastrado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-            app.exibirTela("login");
-            view.setNome("");
-            view.setCPF("");
-            view.setAdmin();
-        } else {
-            JOptionPane.showMessageDialog(view, "Erro ao cadastrar usuário. Verifique se o CPF já existe.", "Erro de Cadastro", JOptionPane.ERROR_MESSAGE);
+        if(cpf.length()!=11) {
+            JOptionPane.showMessageDialog(view, "CPF menor que 11 dígitos", "Erro de Cadastro", JOptionPane.ERROR_MESSAGE);
+            return;
         }
+        try {
+        	double CPF=Double.parseDouble(cpf);
+        	Usuario novoUsuario = new Usuario(nome, cpf, ehAdmin);
+            if (usuarioDAO.inserir(novoUsuario)) {
+                JOptionPane.showMessageDialog(view, "Usuário cadastrado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                view.setNome("");
+                view.setCPF("");
+                view.setAdmin();
+                app.exibirTela("login");
+             
+            } else {
+                JOptionPane.showMessageDialog(view, "Erro ao cadastrar usuário. Verifique se o CPF já existe.", "Erro de Cadastro", JOptionPane.ERROR_MESSAGE);
+            }
+        }catch(Exception e) {
+            JOptionPane.showMessageDialog(view, "O CPF deve conter apenas números", "Erro de Cadastro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        
     }
 }

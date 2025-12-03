@@ -1,5 +1,6 @@
 package view;
 
+import net.miginfocom.swing.MigLayout; // Certifique-se de ter a biblioteca MigLayout no seu projeto
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -20,51 +21,51 @@ public class CadastroProdutoView extends JPanel {
     private final DefaultTableModel modeloTabela;
 
     public CadastroProdutoView() {
-        setLayout(new BorderLayout(10, 10));
+       
+        setLayout(new MigLayout("insets 20, center", "[grow, center]", "[][grow, fill][]")); 
 
-        // Formulário de cadastro
-        JPanel painelFormulario = new JPanel(new GridLayout(3, 2, 5, 5));
+        JPanel painelFormulario = new JPanel(new MigLayout("wrap 2, fillx", "[right]10[grow, fill]", ""));
         painelFormulario.setBorder(BorderFactory.createTitledBorder("Dados do Produto"));
 
-        painelFormulario.add(new JLabel("Nome:"));
+        painelFormulario.add(new JLabel("Nome:"), "right");
         campoNome = new JTextField(20);
-        painelFormulario.add(campoNome);
+        painelFormulario.add(campoNome, "growx");
 
-        painelFormulario.add(new JLabel("Preço:"));
+        painelFormulario.add(new JLabel("Preço:"), "right");
         campoPreco = new JTextField(20);
-        painelFormulario.add(campoPreco);
+        painelFormulario.add(campoPreco, "growx");
         
-        painelFormulario.add(new JLabel("Estoque:"));
+        painelFormulario.add(new JLabel("Estoque:"), "right");
         campoEstoque = new JTextField(20);
-        painelFormulario.add(campoEstoque);
+        painelFormulario.add(campoEstoque, "growx");
 
-        // Tabela de produtos
+       
         String[] colunas = {"ID", "Nome", "Preço", "Estoque"};
         modeloTabela = new DefaultTableModel(colunas, 0);
         tabelaProdutos = new JTable(modeloTabela);
         tabelaProdutos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane scrollPane = new JScrollPane(tabelaProdutos);
 
-        // Botões de ação
-        JPanel painelBotoes = new JPanel(new GridLayout(1, 5, 5, 5));
+        JPanel painelBotoes = new JPanel(new MigLayout("fillx, align center", "grow", ""));
         btnCadastrar = new JButton("Cadastrar");
         btnEditar = new JButton("Editar");
         btnRemover = new JButton("Remover");
         btnLimpar = new JButton("Limpar");
         btnDeslogar = new JButton("Deslogar");
 
-        painelBotoes.add(btnCadastrar);
-        painelBotoes.add(btnEditar);
-        painelBotoes.add(btnRemover);
-        painelBotoes.add(btnLimpar);
-        painelBotoes.add(btnDeslogar);
+    
+        painelBotoes.add(btnCadastrar, "growx");
+        painelBotoes.add(btnEditar, "growx");
+        painelBotoes.add(btnRemover, "growx");
+        painelBotoes.add(btnLimpar, "growx");
+        painelBotoes.add(btnDeslogar, "growx");
         
-        // Adiciona os painéis à view principal
-        add(painelFormulario, BorderLayout.NORTH);
-        add(scrollPane, BorderLayout.CENTER);
-        add(painelBotoes, BorderLayout.SOUTH);
+   
+        add(painelFormulario, "wrap, growx, w 600::"); 
+        add(scrollPane, "wrap, grow, push, w 600::"); 
+        add(painelBotoes, "growx, w 600::"); 
 
-        // Listener para preencher os campos ao clicar na tabela
+ 
         tabelaProdutos.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -78,10 +79,13 @@ public class CadastroProdutoView extends JPanel {
         });
     }
 
-    // Getters para os campos e botões
+    // Getters para os campos e botões... (Métodos mantidos)
     public String getNome() { return campoNome.getText(); }
     public String getPreco() { return campoPreco.getText(); }
     public String getEstoque() { return campoEstoque.getText(); }
+    public void setNome() {  campoNome.setText(""); }
+    public void setPreco() {  campoPreco.setText(""); }
+    public void setEstoque() { campoEstoque.setText(""); }
     public JTable getTabelaProdutos() { return tabelaProdutos; }
     public DefaultTableModel getModeloTabela() { return modeloTabela; }
     public JButton getBtnCadastrar() { return btnCadastrar; }

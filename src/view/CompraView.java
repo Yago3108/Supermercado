@@ -1,5 +1,6 @@
 package view;
 
+import net.miginfocom.swing.MigLayout; // Certifique-se de ter a biblioteca MigLayout no seu projeto
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
@@ -23,9 +24,12 @@ public class CompraView extends JPanel {
     private final JLabel lblTotal;
 
     public CompraView() {
-        setLayout(new BorderLayout(10, 10));
+        setLayout(new MigLayout(
+            "fill, insets 10, hidemode 3", 
+            "[grow, fill]10[grow, fill]", 
+            "[grow, fill][][grow, fill]"
+        ));
 
-        // Painel de Produtos Disponíveis
         JPanel painelProdutos = new JPanel(new BorderLayout());
         painelProdutos.setBorder(new TitledBorder("Produtos Disponíveis"));
         String[] colunasDisponiveis = {"ID", "Nome", "Preço", "Estoque"};
@@ -34,44 +38,47 @@ public class CompraView extends JPanel {
         tabelaProdutosDisponiveis.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         painelProdutos.add(new JScrollPane(tabelaProdutosDisponiveis), BorderLayout.CENTER);
         
-        // Painel do Carrinho
+        add(painelProdutos, "cell 0 0, grow, push"); 
+
         JPanel painelCarrinho = new JPanel(new BorderLayout());
         painelCarrinho.setBorder(new TitledBorder("Carrinho de Compras"));
-        String[] colunasCarrinho = {"Nome", "Preço", "Quantidade"}; // <--- CORRIGIDO
+        String[] colunasCarrinho = {"Nome", "Preço", "Quantidade"}; 
         modeloTabelaCarrinho = new DefaultTableModel(colunasCarrinho, 0);
         tabelaCarrinho = new JTable(modeloTabelaCarrinho);
         tabelaCarrinho.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         painelCarrinho.add(new JScrollPane(tabelaCarrinho), BorderLayout.CENTER);
-
-        // Painel de Ações
-        JPanel painelAcoes = new JPanel(new BorderLayout(10, 10));
-        JPanel painelBotoes = new JPanel(new GridLayout(1, 2, 5, 5));
+        add(painelCarrinho, "cell 1 0, grow, push, wrap"); 
+        JPanel painelAcoesCarrinho = new JPanel(new MigLayout("fillx, insets 0", "[grow, fill]10[grow, fill]", ""));
         btnAdicionar = new JButton("Adicionar ao Carrinho");
         btnRemover = new JButton("Remover do Carrinho");
-        painelBotoes.add(btnAdicionar);
-        painelBotoes.add(btnRemover);
-        JPanel painelTotal = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        painelAcoesCarrinho.add(btnAdicionar, "growx");
+        painelAcoesCarrinho.add(btnRemover, "growx");
+
+
+        add(painelAcoesCarrinho, "span 2, growx, wrap 10"); 
+        
+
+        JPanel painelRodape = new JPanel(new MigLayout("fillx, insets 0", "[grow, right]20[fill]", ""));
+        
         lblTotal = new JLabel("Total: R$ 0,00");
         lblTotal.setFont(new Font("Arial", Font.BOLD, 16));
-        painelTotal.add(lblTotal);
         
-        JPanel painelFinalizar = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+    
+        JPanel painelBotoesFinal = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         btnFinalizarCompra = new JButton("Finalizar Compra");
         btnDeslogar = new JButton("Deslogar");
-        painelFinalizar.add(btnFinalizarCompra);
-        painelFinalizar.add(btnDeslogar);
+        painelBotoesFinal.add(btnFinalizarCompra);
+        painelBotoesFinal.add(btnDeslogar);
+        
 
-        painelAcoes.add(painelBotoes, BorderLayout.NORTH);
-        painelAcoes.add(painelTotal, BorderLayout.CENTER);
-        painelAcoes.add(painelFinalizar, BorderLayout.SOUTH);
+        painelRodape.add(lblTotal, "align right, pushx");
+        painelRodape.add(painelBotoesFinal, "align right");
 
-        // Adiciona os painéis à view principal
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, painelProdutos, painelCarrinho);
-        splitPane.setResizeWeight(0.5);
+    
+        add(painelRodape, "span 2, growx, pushy 0"); 
 
-        add(splitPane, BorderLayout.CENTER);
-        add(painelAcoes, BorderLayout.SOUTH);
     }
+    
     public void atualizarTabelaProdutos(List<Produto> produtos) {
         modeloTabelaDisponiveis.setRowCount(0); 
         
@@ -79,19 +86,19 @@ public class CompraView extends JPanel {
             modeloTabelaDisponiveis.addRow(new Object[]{p.getId(), p.getNome(), p.getPreco(), p.getQuantidadeEstoque()});
         }
     }
-    // Métodos para atualizar a view
+ 
     public void atualizarTabelaCarrinho(Map<Produto, Integer> itensComQuantidade) {
-        modeloTabelaCarrinho.setRowCount(0); // Limpa a tabela
-        // Iterar sobre o Map
+        modeloTabelaCarrinho.setRowCount(0); 
+ 
         for (Map.Entry<Produto, Integer> entry : itensComQuantidade.entrySet()) {
             Produto p = entry.getKey();
             int quantidade = entry.getValue();
-            modeloTabelaCarrinho.addRow(new Object[]{p.getNome(), p.getPreco(), quantidade}); // Adiciona a quantidade
+            modeloTabelaCarrinho.addRow(new Object[]{p.getNome(), p.getPreco(), quantidade}); 
         }
     }
     
     public void atualizarTabelaCarrinho(List<Produto> produtos) {
-        modeloTabelaCarrinho.setRowCount(0); // Limpa a tabela
+        modeloTabelaCarrinho.setRowCount(0);
         for (Produto p : produtos) {
             modeloTabelaCarrinho.addRow(new Object[]{p.getNome(), p.getPreco()});
         }
@@ -103,14 +110,10 @@ public class CompraView extends JPanel {
     public DefaultTableModel getModeloTabela() { 
         return modeloTabelaDisponiveis; 
     }
-    // Getters para botões e tabelas
     public JButton getBtnAdicionar() { return btnAdicionar; }
     public JButton getBtnRemover() { return btnRemover; }
     public JButton getBtnFinalizarCompra() { return btnFinalizarCompra; }
     public JButton getBtnDeslogar() { return btnDeslogar; }
     public JTable getTabelaProdutosDisponiveis() { return tabelaProdutosDisponiveis; }
     public JTable getTabelaCarrinho() { return tabelaCarrinho; }
-    
-    
-
 }

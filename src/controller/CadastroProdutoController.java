@@ -111,6 +111,9 @@ public class CadastroProdutoController {
     private void limparCampos() {
         view.getBtnLimpar().addActionListener(e -> {
             view.getTabelaProdutos().clearSelection();
+            view.setNome();
+            view.setEstoque();
+            view.setPreco();
         });
     }
 }

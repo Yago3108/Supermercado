@@ -20,9 +20,16 @@ public class LoginController {
         this.loginView.addCadastrarListener(e -> app.exibirTela("cadastroUsuario"));
     }
     private void autenticarUsuario() {
+    	try {
         String cpf = loginView.getCpf();              
+        double cpfint=Double.parseDouble(cpf);
         Usuario usuario = usuarioDAO.buscarPorCpf(cpf);
-      
+        if(cpf.length()!=11) {
+        	 JOptionPane.showMessageDialog(loginView, "CPF deve conter 11 números.", "Erro de Login", JOptionPane.ERROR_MESSAGE);
+             loginView.setTfCpf("");
+             loginView.setTfNome("");
+        	return;
+        }
         if (usuario != null) {
        
         	app.logarUsuario(usuario);
@@ -33,6 +40,8 @@ public class LoginController {
             JOptionPane.showMessageDialog(loginView, "Usuário não encontrado.", "Erro de Login", JOptionPane.ERROR_MESSAGE);
             loginView.setTfCpf("");
             loginView.setTfNome("");
+        }}catch(Exception e) {
+        	  JOptionPane.showMessageDialog(loginView, "O CPF deve conter apenas números.", "Erro de Login", JOptionPane.ERROR_MESSAGE);
         }
     }
  
